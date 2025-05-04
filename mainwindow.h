@@ -1,13 +1,14 @@
+// mainwindow.h
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
+#include <QTextEdit>
+#include <QPushButton>
+#include <QFileDialog>
+#include <QLabel>
+#include "wordcountdto.h"
+#include "wordcountservice.h"
 
 class MainWindow : public QMainWindow
 {
@@ -17,7 +18,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void onCalculateButtonClicked();
+    void onLoadFileButtonClicked();
+
 private:
-    Ui::MainWindow *ui;
+    QTextEdit *textEdit;
+    QPushButton *calculateButton;
+    QPushButton *loadFileButton;
+    QLabel *resultLabel;
+    WordCountService wordCountService;
 };
+
 #endif // MAINWINDOW_H
