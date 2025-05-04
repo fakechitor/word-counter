@@ -1,17 +1,19 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QVBoxLayout>
 #include <QFile>
+#include <QDockWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     textEdit(new QTextEdit(this)),
     calculateButton(new QPushButton("Посчитать слова", this)),
     loadFileButton(new QPushButton("Загрузить файл", this)),
-    resultLabel(new QLabel("Количество слов: 0", this))
+    resultLabel(new QLabel("Количество слов: 0", this)),
+    historyWidget(new WordCountHistory(this)),
+    dockWidget(new QDockWidget("История запросов", this))
 {
     setWindowTitle("Word Counter");
-    setGeometry(100, 100, 400, 300);
+    setGeometry(100, 100, 600, 400);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(textEdit);
@@ -22,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget *centralWidget = new QWidget(this);
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
+
+    dockWidget->setWidget(historyWidget);
+    addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 
     connect(calculateButton, &QPushButton::clicked, this, &MainWindow::onCalculateButtonClicked);
     connect(loadFileButton, &QPushButton::clicked, this, &MainWindow::onLoadFileButtonClicked);
@@ -34,6 +39,7 @@ void MainWindow::onCalculateButtonClicked()
     WordCountDTO dto(textEdit->toPlainText());
     int wordCount = wordCountService.countWords(dto);
     resultLabel->setText("Количество слов: " + QString::number(wordCount));
+    historyWidget->addHistoryItem(dto.getText(), wordCount);
 }
 
 void MainWindow::onLoadFileButtonClicked()
