@@ -7,6 +7,8 @@
 #include <QHBoxLayout>
 #include <QStringList>
 #include <QLabel>
+#include <QClipboard>
+#include <QApplication>
 
 class WordCountHistory : public QWidget
 {
@@ -39,9 +41,17 @@ public:
         itemLayout->addWidget(wordCountLabel);
 
         historyLayout->insertWidget(0, itemWidget);
+
+        connect(textButton, &QPushButton::clicked, this, [this, text](){ copyToClipboard(text); });
     }
 
 private:
+    void copyToClipboard(const QString &text)
+    {
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->setText(text);
+    }
+
     QVBoxLayout *historyLayout;
 };
 
