@@ -2,8 +2,11 @@
 #define WORDCOUNTHISTORY_H
 
 #include <QWidget>
-#include <QListWidget>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QStringList>
+#include <QLabel>
 
 class WordCountHistory : public QWidget
 {
@@ -12,16 +15,34 @@ class WordCountHistory : public QWidget
 public:
     explicit WordCountHistory(QWidget *parent = nullptr) : QWidget(parent)
     {
-        historyList = new QListWidget(this);
+        historyLayout = new QVBoxLayout(this);
+        historyLayout->setAlignment(Qt::AlignTop);
+        setLayout(historyLayout);
     }
 
     void addHistoryItem(const QString &text, int wordCount)
     {
-        historyList->addItem(text + " - " + QString::number(wordCount) + " слов");
+        QString truncatedText = text.left(80);
+        if (text.length() > 80) {
+            truncatedText += "...";
+        }
+
+        QWidget *itemWidget = new QWidget(this);
+        QHBoxLayout *itemLayout = new QHBoxLayout(itemWidget);
+
+        QPushButton *textButton = new QPushButton(truncatedText, itemWidget);
+        textButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+        QLabel *wordCountLabel = new QLabel("Кол-во слов: " + QString::number(wordCount), itemWidget);
+
+        itemLayout->addWidget(textButton);
+        itemLayout->addWidget(wordCountLabel);
+
+        historyLayout->insertWidget(0, itemWidget);
     }
 
 private:
-    QListWidget *historyList;
+    QVBoxLayout *historyLayout;
 };
 
 #endif

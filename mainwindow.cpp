@@ -1,7 +1,10 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include <QVBoxLayout>
 #include <QFile>
 #include <QDockWidget>
+#include <QPushButton>
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -39,6 +42,7 @@ void MainWindow::onCalculateButtonClicked()
     WordCountDTO dto(textEdit->toPlainText());
     int wordCount = wordCountService.countWords(dto);
     resultLabel->setText("Количество слов: " + QString::number(wordCount));
+
     historyWidget->addHistoryItem(dto.getText(), wordCount);
 }
 
