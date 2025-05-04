@@ -1,4 +1,3 @@
-// mainwindow.h
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -30,4 +29,4 @@ private:
     WordCountService wordCountService;
 };
 
-#endif // MAINWINDOW_H
+#endif

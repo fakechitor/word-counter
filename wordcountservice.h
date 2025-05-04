@@ -14,15 +14,13 @@ public:
         QString text = dto.getText();
         text = text.simplified();
 
-        // Используем QRegularExpression для разделения текста
         QRegularExpression re("\\s+");
         QStringList words = text.split(re);
 
-        // Отфильтровываем пустые строки
         words.removeAll("");
 
         return words.count();
     }
 };
 
-#endif // WORDCOUNTSERVICE_H
+#endif
