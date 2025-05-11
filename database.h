@@ -13,6 +13,7 @@
 class Database : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Database(QObject *parent = nullptr)
     {
@@ -20,12 +21,6 @@ public:
 
         QString dbPath = QCoreApplication::applicationDirPath() + "/history.db";
         db.setDatabaseName(dbPath);
-
-        QFile dbFile(dbPath);
-        if (!dbFile.exists()) {
-            qDebug() << "Database file does not exist at:" << dbPath;
-            return;
-        }
 
         if (!db.open()) {
             qDebug() << "Error opening database:" << db.lastError().text();
@@ -56,22 +51,20 @@ public:
         query.prepare("INSERT INTO word_count_history (text, word_count) VALUES (?, ?)");
         query.addBindValue(text);
         query.addBindValue(wordCount);
+
         if (!query.exec()) {
             qDebug() << "Error inserting data:" << query.lastError().text();
         }
     }
-
     QList<QPair<QString, int>> getHistory()
     {
         QList<QPair<QString, int>> history;
-
         QSqlQuery query("SELECT text, word_count FROM word_count_history ORDER BY id DESC");
         while (query.next()) {
             QString text = query.value(0).toString();
             int wordCount = query.value(1).toInt();
             history.append(qMakePair(text, wordCount));
         }
-
         return history;
     }
 
@@ -79,4 +72,4 @@ private:
     QSqlDatabase db;
 };
 
-#endif
+#endif // DATABASE_H
