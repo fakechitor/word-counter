@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Находим Qt и компоненты
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Sql)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Sql)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Sql)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -27,6 +28,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(word-counter
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        database.h
     )
 else()
     if(ANDROID)

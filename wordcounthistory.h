@@ -9,17 +9,20 @@
 #include <QLabel>
 #include <QClipboard>
 #include <QApplication>
+#include "database.h"
 
 class WordCountHistory : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit WordCountHistory(QWidget *parent = nullptr) : QWidget(parent)
+    explicit WordCountHistory(Database *db, QWidget *parent = nullptr) : QWidget(parent), database(db)
     {
         historyLayout = new QVBoxLayout(this);
         historyLayout->setAlignment(Qt::AlignTop);
         setLayout(historyLayout);
+
+        loadHistory();
     }
 
     void addHistoryItem(const QString &text, int wordCount)
@@ -43,7 +46,18 @@ public:
         historyLayout->insertWidget(0, itemWidget);
 
         connect(textButton, &QPushButton::clicked, this, [this, text](){ copyToClipboard(text); });
+
+        database->addHistoryItem(text, wordCount);
     }
+    void loadHistory()
+    {
+        QList<QPair<QString, int>> history = database->getHistory();
+
+        for (const auto &item : history) {
+            addHistoryItem(item.first, item.second);
+        }
+    }
+
 
 private:
     void copyToClipboard(const QString &text)
@@ -52,7 +66,9 @@ private:
         clipboard->setText(text);
     }
 
+
     QVBoxLayout *historyLayout;
+    Database *database;
 };
 
-#endif
+#endif // WORDCOUNTHISTORY_H

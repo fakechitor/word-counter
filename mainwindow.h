@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTextEdit>
+#include <QTextStream>
 #include <QPushButton>
 #include <QFileDialog>
 #include <QLabel>
@@ -10,6 +11,7 @@
 #include "wordcountdto.h"
 #include "wordcountservice.h"
 #include "wordcounthistory.h"
+#include "database.h"
 
 class MainWindow : public QMainWindow
 {
@@ -28,9 +30,10 @@ private:
     QPushButton *calculateButton;
     QPushButton *loadFileButton;
     QLabel *resultLabel;
-    WordCountService wordCountService;
+    WordCountService *wordCountService;
     WordCountHistory *historyWidget;
     QDockWidget *dockWidget;
+    Database *database;
 };
 
-#endif
+#endif // MAINWINDOW_H
